@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>도로 거리 & 비용 계산기</title>
+    <style>
+        body { font-family: Arial; max-width: 700px; margin: 30px auto; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        h2 { color: #2c3e50; }
+        input, select, button { padding: 8px; margin: 5px 0; width: 100%; }
+        label { font-weight: bold; margin-top: 10px; display: block; }
+        .result { margin-top: 20px; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>🚗 도로 거리 및 비용 계산기</h2>
+    <form method="post">
+        <label>출발지 주소</label>
+        <input type="text" name="start" required>
+
+        <label>도착지 주소</label>
+        <input type="text" name="goal" required>
+
+        <label>차종</label>
+        <select name="cartype">
+            <option>승용차</option>
+            <option>중형승합/화물</option>
+            <option>대형차</option>
+            <option>3축 이상</option>
+            <option>4축 이상</option>
+            <option>경차</option>
+        </select>
+
+        <label>연료</label>
+        <select name="fueltype">
+            <option>휘발유</option>
+            <option>고급휘발유</option>
+            <option>경유</option>
+            <option>LPG</option>
+        </select>
+
+        <label>연비 (km/L)</label>
+        <input type="number" name="mileage" step="0.1" value="14" required>
+
+        <button type="submit">계산하기</button>
+    </form>
+
+    {% if result %}
+        <div class="result">
+            {% if result.error %}
+                <div class="error">⚠ {{ result.error }}</div>
+            {% else %}
+                <div><strong>🚗 거리:</strong> {{ result.distance_km }} km</div>
+                <div><strong>🛣️ 통행료:</strong> {{ result.toll | int | comma }} 원</div>
+                <div><strong>⛽ 유류비:</strong> {{ result.fuel | int | comma }} 원</div>
+                <div><strong>💰 총 비용:</strong> {{ result.total | int | comma }} 원</div>
+            {% endif %}
+        </div>
+    {% endif %}
+</body>
+</html>
