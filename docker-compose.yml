@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   routecal:
     build: .
@@ -8,8 +10,12 @@ services:
       - NAVER_CLIENT_ID
       - NAVER_CLIENT_SECRET
     volumes:
-      - /home/ubuntu/routecal:/app/data
+      - /home/ubuntu/routecal/results:/app/results
     networks:
       - portainer_portainer-net
     restart: unless-stopped
     command: gunicorn -w 4 -b 0.0.0.0:5000 app:app
+
+networks:
+  portainer_portainer-net:
+    external: true
