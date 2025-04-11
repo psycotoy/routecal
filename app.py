@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import requests
 import os
+import pandas as pd
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -87,6 +89,15 @@ def index():
         else:
             route_info = get_route_info(start_coords, goal_coords, cartype, fueltype, mileage)
             result = route_info if route_info else {"error": "경로 정보를 불러올 수 없습니다."}
+
+            # 결과 엑셀 자동 저장
+            if route_info:
+                now = datetime.now().strftime("%Y%m%d%H%M%S")
+                filename = f"/app/results/result_{now}.xlsx"
+                df = pd.DataFrame([{**route_info, "출발지": start, "도착지": goal}])
+                df = df[["출발지", "도착지", "distance_km", "toll", "fuel", "total"]]
+                df.columns = ["출발지", "도착지", "거리(km)", "통행료(원)", "유류비(원)", "총 비용(원)"]
+                df.to_excel(filename, index=False)
 
     return render_template("index.html", result=result)
 
